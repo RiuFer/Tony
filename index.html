@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading Screen Extraction</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            background-color: #111; /* Dark background to see the fade out */
+        }
+
+        /* --- Loading Screen Animations --- */
+        
+        /* Loader Transition Logic */
+        #loader { 
+            transition: opacity 0.6s ease-out, visibility 0.6s; 
+        }
+        .loader-hidden { 
+            opacity: 0; 
+            visibility: hidden; 
+        }
+        
+        /* Scan Line Animation */
+        .scan-line {
+            width: 100%; 
+            height: 2px; 
+            background: #818cf8;
+            box-shadow: 0 0 10px #4f46e5;
+            animation: scan 2s linear infinite;
+        }
+        @keyframes scan { 
+            0% { transform: translateX(-100%); } 
+            100% { transform: translateX(100%); } 
+        }
+
+        /* Glitch Text Effect */
+        .glitch-load { 
+            animation: glitch-skew 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite; 
+            position: relative; 
+        }
+        .glitch-load::before, .glitch-load::after {
+            content: attr(data-text); 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%;
+        }
+        .glitch-load::before {
+            left: 2px; 
+            text-shadow: -2px 0 #4f46e5; 
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim 5s infinite linear alternate-reverse;
+        }
+        .glitch-load::after {
+            left: -2px; 
+            text-shadow: -2px 0 #22d3ee; 
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim 5s infinite linear alternate-reverse;
+        }
+        
+        @keyframes glitch-skew {
+            0% { transform: skew(0deg); } 20% { transform: skew(-2deg); }
+            40% { transform: skew(2deg); } 60% { transform: skew(0deg); }
+            80% { transform: skew(3deg); } 100% { transform: skew(0deg); }
+        }
+        @keyframes glitch-anim {
+            0% { clip: rect(12px, 9999px, 32px, 0); } 20% { clip: rect(65px, 9999px, 86px, 0); }
+            40% { clip: rect(23px, 9999px, 6px, 0); } 60% { clip: rect(89px, 9999px, 12px, 0); }
+            80% { clip: rect(44px, 9999px, 78px, 0); } 100% { clip: rect(3px, 9999px, 42px, 0); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Loading Screen HTML -->
+    <div id="loader" class="fixed inset-0 z-[100] bg-black flex flex-col items-center justify-center">
+        <div class="relative mb-8 text-center">
+            <!-- Note: data-text attribute is required for the glitch effect -->
+            <h1 class="glitch-load text-4xl font-bold tracking-tighter text-white uppercase" data-text="ANTOINE MELANÇON">ANTOINE MELANÇON</h1>
+            <p class="text-xs font-mono text-indigo-400 mt-2 tracking-widest">LEVEL DESIGNER // MONTREAL</p>
+        </div>
+        <!-- Progress Bar Container -->
+        <div class="w-64 h-0.5 bg-neutral-900 overflow-hidden relative">
+            <div class="scan-line absolute top-0 left-0"></div>
+        </div>
+    </div>
+
+    <!-- Content to show after loading -->
+    <div class="flex items-center justify-center h-screen text-white">
+        <p>Main Website Content Loaded</p>
+    </div>
+
+    <script>
+        // Loading Screen Logic
+        window.addEventListener('load', () => {
+            // Delay to simulate loading or ensure animations are seen
+            setTimeout(() => {
+                const loader = document.getElementById('loader');
+                
+                // Add class to trigger CSS fade out
+                loader.classList.add('loader-hidden');
+                
+                // Remove from DOM/Display after transition finishes (0.6s)
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                }, 600);
+            }, 1500); // 1500ms total display time
+        });
+    </script>
+</body>
+</html>
